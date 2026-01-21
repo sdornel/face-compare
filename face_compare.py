@@ -11,8 +11,11 @@ MODEL_NAME = "buffalo_l"
 CSV_OUTPUT = "similarity_matrix.csv"
 # ------------------------
 
+THRESHOLD = 0.55
+WEAK_RATIO_LIMIT = 0.4
+
 print("Loading face model...")
-app = FaceAnalysis(name=MODEL_NAME, providers=["CUDAExecutionProvider"])
+app = FaceAnalysis(name=MODEL_NAME, providers=["CUDAExecutionProvider", "CPUExecutionProvider"])
 app.prepare(ctx_id=0, det_size=(640, 640))
 
 def compute_similarity_stats(similarity):
@@ -33,9 +36,6 @@ def compute_similarity_stats(similarity):
     return avg, median, minimum, maximum, values
 
 def display_stability_warnings(similarity, image_names):
-    THRESHOLD = 0.55
-    WEAK_RATIO_LIMIT = 0.4
-
     weak_pairs_global = []
 
     print("\n=== Identity Stability Warnings ===\n")
@@ -124,12 +124,13 @@ def main():
 
     embeddings = np.array(embeddings)
 
-    print("\nComputing similarity matrix...\n")
     similarity = cosine_similarity(embeddings)
 
     display_stability_warnings(similarity, image_names)
 
     compute_similarity_stats(similarity)
+
+    print("\nComputing similarity matrix...\n")
 
     # ---------- print table ----------
     header = " " * 22
