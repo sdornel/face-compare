@@ -1,10 +1,12 @@
 # face-compare
 
 ## TO RUN
-1) python3 -m venv venv
+1) Add images to faces directory
+
+2) python3 -m venv venv
 source venv/bin/activate
 
-2) pip install --upgrade pip
+3) pip install --upgrade pip
 pip install -r requirements.txt
 
-3) python face_compare.py
+4) python face_compare.py
