@@ -16,7 +16,7 @@ app = FaceAnalysis(name=MODEL_NAME, providers=["CUDAExecutionProvider"])
 app.prepare(ctx_id=0, det_size=(640, 640))
 
 def display_stability_warnings(similarity, image_names):
-    THRESHOLD = 0.60
+    THRESHOLD = 0.55
     WEAK_RATIO_LIMIT = 0.4
     print("\n=== Identity Stability Warnings ===\n")
 
