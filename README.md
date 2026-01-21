@@ -1,5 +1,8 @@
 # face-compare
 
+## Description
+Allow user to compare multiple faces with one another.
+
 ## TO RUN
 1) python3 -m venv venv
 source venv/bin/activate
