@@ -15,15 +15,34 @@ print("Loading face model...")
 app = FaceAnalysis(name=MODEL_NAME, providers=["CUDAExecutionProvider"])
 app.prepare(ctx_id=0, det_size=(640, 640))
 
+def compute_similarity_stats(similarity):
+    n = similarity.shape[0]
+    values = []
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            values.append(similarity[i][j])
+
+    values = np.array(values)
+
+    avg = float(np.mean(values))
+    median = float(np.median(values))
+    minimum = float(np.min(values))
+    maximum = float(np.max(values))
+
+    return avg, median, minimum, maximum, values
+
 def display_stability_warnings(similarity, image_names):
     THRESHOLD = 0.55
     WEAK_RATIO_LIMIT = 0.4
+
+    weak_pairs_global = []
+
     print("\n=== Identity Stability Warnings ===\n")
 
     for i, name in enumerate(image_names):
         sims = similarity[i]
 
-        # exclude self-comparison
         others = np.delete(sims, i)
         other_names = [n for j, n in enumerate(image_names) if j != i]
 
@@ -37,6 +56,14 @@ def display_stability_warnings(similarity, image_names):
 
         weak_ratio = len(weak_pairs) / len(others)
 
+        # collect unique weak pairs
+        for j in range(i + 1, len(image_names)):
+            score = similarity[i][j]
+            if score < THRESHOLD:
+                weak_pairs_global.append(
+                    (image_names[i], image_names[j], score)
+                )
+
         if avg_sim < THRESHOLD or weak_ratio > WEAK_RATIO_LIMIT:
             print(f"⚠️  {name}")
             print(f"    avg similarity: {avg_sim:.3f}")
@@ -46,6 +73,28 @@ def display_stability_warnings(similarity, image_names):
                 print(f"       ↳ {other_name}: {score:.3f}")
 
             print()
+
+    # ---------- overall stats ----------
+    avg_sim, median_sim, min_sim, max_sim, all_pairs = compute_similarity_stats(similarity)
+
+    print("\n=== Overall Identity Consistency ===")
+    print(f"Total comparisons: {len(all_pairs)}")
+    print(f"Average similarity: {avg_sim:.3f}")
+    print(f"Median similarity:  {median_sim:.3f}")
+    print(f"Lowest pair:        {min_sim:.3f}")
+    print(f"Highest pair:       {max_sim:.3f}")
+
+    # ---------- weak pair summary ----------
+    if weak_pairs_global:
+        print(f"\n=== Weak Pair Summary (< {THRESHOLD}) ===")
+        print(f"Total weak pairs: {len(weak_pairs_global)}\n")
+
+        weak_pairs_global.sort(key=lambda x: x[2])
+
+        for a, b, score in weak_pairs_global:
+            print(f"⚠️  {a}  ↔  {b}   = {score:.3f}")
+    else:
+        print("\n✅ No weak identity pairs detected.")
 
 def main():
     embeddings = []
@@ -79,6 +128,8 @@ def main():
     similarity = cosine_similarity(embeddings)
 
     display_stability_warnings(similarity, image_names)
+
+    compute_similarity_stats(similarity)
 
     # ---------- print table ----------
     header = " " * 22
