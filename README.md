@@ -3,10 +3,10 @@
 ## Description
 Allow user to compare multiple faces with one another. Results are outputted via console and a .csv file.
 
-Console results are more in-depth as they show weak pairings and avg, median, lowest/highest values.
+Console results are more in-depth as they show weak pairings and avg, median, lowest/highest values. Similarity matrix is worse in terminal.
 
 ## TO RUN
-1) Add images to images directory. The app auto detects faces
+1) Add images to images directory. The faces are automatically detected
 
 2) python3 -m venv venv
 source venv/bin/activate
