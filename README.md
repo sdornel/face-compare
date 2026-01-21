@@ -1,10 +1,10 @@
 # face-compare
 
 ## Description
-Allow user to compare multiple faces with one another.
+Allow user to compare multiple faces with one another. Results are outputted via console and a .csv file
 
 ## TO RUN
-1) Add images to images directory. The code app auto detects faces
+1) Add images to images directory. The app auto detects faces
 
 2) python3 -m venv venv
 source venv/bin/activate
