@@ -4,7 +4,7 @@
 Allow user to compare multiple faces with one another.
 
 ## TO RUN
-1) Add images to faces directory
+1) Add images to images directory. The code app auto detects faces
 
 2) python3 -m venv venv
 source venv/bin/activate

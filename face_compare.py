@@ -6,7 +6,7 @@ from insightface.app import FaceAnalysis
 from sklearn.metrics.pairwise import cosine_similarity
 
 # -------- config --------
-IMAGE_DIR = "faces"
+IMAGE_DIR = "images"
 MODEL_NAME = "buffalo_l"
 CSV_OUTPUT = "similarity_matrix.csv"
 # ------------------------
