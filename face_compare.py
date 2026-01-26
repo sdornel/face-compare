@@ -11,7 +11,7 @@ MODEL_NAME = "buffalo_l"
 CSV_OUTPUT = "similarity_matrix.csv"
 # ------------------------
 
-THRESHOLD = 0.55
+THRESHOLD = 0.65
 WEAK_RATIO_LIMIT = 0.4
 
 print("Loading face model...")
